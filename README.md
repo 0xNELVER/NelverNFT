@@ -1,28 +1,17 @@
-# Create T3 App
+# NelverNFT - Accelerating NFT Adoption with Real-World Solutions
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+NelverNFT is a project aimed at accelerating the adoption of NFT technology among mainstream users by providing practical and user-friendly solutions. Our vision is to create a unique touchpoint for building truly useful NFT projects and providing a protocol for the efficient and effective conversion of Web 2.0 businesses to Web 3.0.
 
-## What's next? How do I make an app with this?
+## Goals & Mission of NelverNFT
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+Our mission is to focus on delivering a better user experience and promoting the practical use of NFTs in real-world applications. We aim to provide open-source tools for Web3.0 developers to extend the utility features related to NFTs.
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+In addition, NelverNFT plans to build the Nelver Network on the Solana SDK, one of the best NFT development platforms with the most users. Specifically, we will work on projects such as StepN, DeGods, y00ts, and more.
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+## Features
 
-## Learn More
-
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
-
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
-
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
-
-## How do I deploy this?
-
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+- Open-source tools for Web3.0 developers
+- User-friendly solutions for NFT adoption
+- Real-world applications for NFTs
+- Efficient conversion of Web 2.0 businesses to Web 3.0
+- Nelver Network built on the Solana SDK
