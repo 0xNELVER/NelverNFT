@@ -1,9 +1,21 @@
-import { type AppType } from "next/app";
+import { MainProvider } from "@nelver/client/components/MainLayout/_provider";
 import { api } from "@nelver/utils/api";
-import { MantineProvider } from "@mantine/core";
+import { type NextPage } from "next";
+import { type AppProps, type AppType } from "next/app";
 import Head from "next/head";
+import { type ReactElement, type ReactNode } from "react";
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
+
+const MyApp: AppType<{ Layout: ReactNode }> = ({ Component, pageProps }: AppPropsWithLayout) => {
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <>
       <Head>
@@ -11,17 +23,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
 
-      <MantineProvider
-        withGlobalStyles
-        withNormalizeCSS
-        theme={{
-          /** Put your mantine theme override here */
-          colorScheme: "light",
-          fontFamily: "sans-serif"
-        }}
-      >
-        <Component {...pageProps} />
-      </MantineProvider>
+      <MainProvider>{getLayout(<Component {...pageProps} />)}</MainProvider>
     </>
   );
 };

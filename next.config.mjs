@@ -20,5 +20,8 @@ const config = {
     locales: ["en"],
     defaultLocale: "en",
   },
+  images: {
+    domains: ["link3-image.cyberconnect.dev", "ipfs.cyberconnect.dev"],
+  },
 };
 export default config;
