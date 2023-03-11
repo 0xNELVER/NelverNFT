@@ -1,7 +1,11 @@
 import { type ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
-import { useState, type PropsWithChildren } from "react";
+import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
+import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
+import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
+import { clusterApiUrl } from "@solana/web3.js";
+import { useMemo, useState, type PropsWithChildren } from "react";
 
-export function MainProvider({ children }: PropsWithChildren) {
+function NelverUIProvider({ children }: PropsWithChildren) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
   const toggleColorScheme = (value?: ColorScheme) =>
     setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"));
@@ -61,5 +65,27 @@ export function MainProvider({ children }: PropsWithChildren) {
         {children}
       </MantineProvider>
     </ColorSchemeProvider>
+  );
+}
+
+function NelverBlockchainProvider({ children }: PropsWithChildren) {
+  const network = WalletAdapterNetwork.Devnet;
+
+  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+
+  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+
+  return (
+    <ConnectionProvider endpoint={endpoint}>
+      <WalletProvider wallets={wallets} autoConnect>{children}</WalletProvider>
+    </ConnectionProvider>
+  );
+}
+
+export function NelverProvider({ children }: PropsWithChildren) {
+  return (
+    <NelverBlockchainProvider>
+      <NelverUIProvider>{children}</NelverUIProvider>
+    </NelverBlockchainProvider>
   );
 }

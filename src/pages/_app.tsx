@@ -1,4 +1,4 @@
-import { MainProvider } from "@nelver/client/components/MainLayout/_provider";
+import { NelverProvider } from "@nelver/client/components/MainLayout/_provider";
 import { api } from "@nelver/utils/api";
 import { type NextPage } from "next";
 import { type AppProps, type AppType } from "next/app";
@@ -23,7 +23,7 @@ const MyApp: AppType<{ Layout: ReactNode }> = ({ Component, pageProps }: AppProp
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
       </Head>
 
-      <MainProvider>{getLayout(<Component {...pageProps} />)}</MainProvider>
+      <NelverProvider>{getLayout(<Component {...pageProps} />)}</NelverProvider>
     </>
   );
 };

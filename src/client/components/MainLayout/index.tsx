@@ -1,6 +1,8 @@
-import { ActionIcon, AppShell, Container, Group, Header, useMantineColorScheme } from "@mantine/core";
+import { ActionIcon, AppShell, Button, Container, Group, Header, useMantineColorScheme } from "@mantine/core";
 import { useHeadroom } from "@mantine/hooks";
 import { Logo } from "@nelver/client/components/MainLayout/_logo";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { PhantomWalletName } from "@solana/wallet-adapter-wallets";
 import { IconMoonStars, IconSun } from "@tabler/icons-react";
 import Link from "next/link";
 import { type PropsWithChildren } from "react";
@@ -8,6 +10,15 @@ import { type PropsWithChildren } from "react";
 export function MainLayout({ children }: PropsWithChildren) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
   const pinned = useHeadroom({ fixedAt: 120 });
+
+  const { connected, connecting, select, disconnect } = useWallet();
+
+  const handleConnectOrDisconnect = () => {
+    if (connected) {
+      return void disconnect();
+    }
+    select(PhantomWalletName);
+  };
 
   return (
     <Container size="xl" px={80}>
@@ -28,9 +39,16 @@ export function MainLayout({ children }: PropsWithChildren) {
                 <Link href="/" passHref>
                   <Logo />
                 </Link>
-                <ActionIcon variant="default" onClick={() => toggleColorScheme()} size={30}>
-                  {colorScheme === "dark" ? <IconSun size="1rem" /> : <IconMoonStars size="1rem" />}
-                </ActionIcon>
+
+                <Group>
+                  <ActionIcon variant="default" onClick={() => toggleColorScheme()} size={30}>
+                    {colorScheme === "dark" ? <IconSun size="1rem" /> : <IconMoonStars size="1rem" />}
+                  </ActionIcon>
+
+                  <Button loading={connecting} onClick={handleConnectOrDisconnect}>
+                    {connected ? "Disconnect Wallet" : "Connect Wallet"}
+                  </Button>
+                </Group>
               </Group>
             </Container>
           </Header>

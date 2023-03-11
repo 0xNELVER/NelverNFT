@@ -34,7 +34,7 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Container className={classes.root} size="100%">
-        <video className={classes.bg} loop autoPlay muted>
+        <video className={classes.bg} loop autoPlay muted playsInline preload="auto">
           <source src="/background.mp4" type="video/mp4" />
         </video>
         <BrandName />
