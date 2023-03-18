@@ -1,7 +1,10 @@
-import { Grid } from "@mantine/core";
+import { Button, Grid, Group, Modal, Text, TextInput, Title } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { modals } from "@mantine/modals";
 import { EventCard } from "@nelver/client/components/EventCard";
 import { MainLayout } from "@nelver/client/components/MainLayout";
 import { type NextPageWithLayout } from "@nelver/pages/_app";
+import { useWallet } from "@solana/wallet-adapter-react";
 import Head from "next/head";
 
 const MockEvents = [
@@ -273,6 +276,14 @@ const MockEvents = [
 ];
 
 const ExploreEvents: NextPageWithLayout = () => {
+  const { connected } = useWallet();
+
+  const form = useForm({
+    initialValues: {
+      title: "",
+    },
+  });
+
   return (
     <>
       <Head>
@@ -280,23 +291,48 @@ const ExploreEvents: NextPageWithLayout = () => {
         <meta name="description" content="Nelver Explore Events" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <Grid grow>
-          {/* <Grid.Col span={12}>Filter Advanced</Grid.Col>
-          <Grid.Col span={2}>Another Filter</Grid.Col> */}
-          <Grid.Col span={12}>
-            <Grid columns={5} gutter="lg">
-              {MockEvents.map((event) => {
-                return (
-                  <Grid.Col key={event.id} span={1}>
-                    <EventCard {...event} />
-                  </Grid.Col>
-                );
-              })}
-            </Grid>
-          </Grid.Col>
-        </Grid>
-      </main>
+
+      <Grid grow>
+        <Grid.Col span={12}>
+          <Group position="apart">
+            <Text></Text>
+            {connected ? (
+              <Button
+                onClick={() =>
+                  modals.open({
+                    centered: true,
+                    title: <Title order={2}>New Event</Title>,
+                    children: (
+                      <form onSubmit={form.onSubmit((values) => console.log(values))}>
+                        <TextInput
+                          withAsterisk
+                          label="Email"
+                          placeholder="your@email.com"
+                          {...form.getInputProps("email")}
+                        />
+                      </form>
+                    ),
+                  })
+                }
+              >
+                New Event
+              </Button>
+            ) : null}
+          </Group>
+        </Grid.Col>
+        {/* <Grid.Col span={2}>Another Filter</Grid.Col> */}
+        <Grid.Col span={12}>
+          <Grid columns={5} gutter="lg">
+            {MockEvents.map((event) => {
+              return (
+                <Grid.Col key={event.id} span={1}>
+                  <EventCard {...event} />
+                </Grid.Col>
+              );
+            })}
+          </Grid>
+        </Grid.Col>
+      </Grid>
     </>
   );
 };

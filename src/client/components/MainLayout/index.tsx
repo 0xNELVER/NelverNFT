@@ -6,6 +6,7 @@ import { PhantomWalletName } from "@solana/wallet-adapter-wallets";
 import { IconMoonStars, IconSun } from "@tabler/icons-react";
 import Link from "next/link";
 import { type PropsWithChildren } from "react";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 export function MainLayout({ children }: PropsWithChildren) {
   const { colorScheme, toggleColorScheme } = useMantineColorScheme();
@@ -19,6 +20,8 @@ export function MainLayout({ children }: PropsWithChildren) {
     }
     select(PhantomWalletName);
   };
+
+  const { data, status } = useSession();
 
   return (
     <Container size="xl" px={80}>
@@ -48,13 +51,18 @@ export function MainLayout({ children }: PropsWithChildren) {
                   <Button loading={connecting} onClick={handleConnectOrDisconnect}>
                     {connected ? "Disconnect Wallet" : "Connect Wallet"}
                   </Button>
+                  {status === "unauthenticated" ? (
+                    <Button onClick={() => void signIn()}>Login</Button>
+                  ) : status === "authenticated" ? (
+                    <Button onClick={() => void signOut()}>Logout</Button>
+                  ) : null}
                 </Group>
               </Group>
             </Container>
           </Header>
         }
       >
-        {children}
+        <main>{children}</main>
       </AppShell>
     </Container>
   );

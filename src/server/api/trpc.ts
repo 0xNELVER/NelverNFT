@@ -15,10 +15,16 @@
  * These allow you to access things when processing a request, like the database, the session, etc.
  */
 import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
+import { type Session } from "next-auth";
 
+import { getServerAuthSession } from "../auth";
 import { prisma } from "@nelver/server/db";
+import { getToken, type JWT } from "next-auth/jwt";
 
-type CreateContextOptions = Record<string, never>;
+type CreateContextOptions = {
+  session: Session | null;
+  token: JWT | null;
+};
 
 /**
  * This helper generates the "internals" for a tRPC context. If you need to use it, you can export
@@ -30,8 +36,10 @@ type CreateContextOptions = Record<string, never>;
  *
  * @see https://create.t3.gg/en/usage/trpc#-servertrpccontextts
  */
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
+const createInnerTRPCContext = (opts: CreateContextOptions) => {
   return {
+    session: opts.session,
+    token: opts.token,
     prisma,
   };
 };
@@ -42,8 +50,18 @@ const createInnerTRPCContext = (_opts: CreateContextOptions) => {
  *
  * @see https://trpc.io/docs/context
  */
-export const createTRPCContext = (_opts: CreateNextContextOptions) => {
-  return createInnerTRPCContext({});
+export type TRPCContext = inferAsyncReturnType<typeof createTRPCContext>;
+export const createTRPCContext = async (opts: CreateNextContextOptions) => {
+  const { req, res } = opts;
+
+  // Get the session from the server using the getServerSession wrapper function
+  const session = await getServerAuthSession({ req, res });
+  const token = await getToken({ req });
+
+  return createInnerTRPCContext({
+    session,
+    token,
+  });
 };
 
 /**
@@ -51,7 +69,7 @@ export const createTRPCContext = (_opts: CreateNextContextOptions) => {
  *
  * This is where the tRPC API is initialized, connecting the context and transformer.
  */
-import { initTRPC } from "@trpc/server";
+import { type inferAsyncReturnType, initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 
 const t = initTRPC.context<typeof createTRPCContext>().create({
@@ -75,6 +93,24 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
  */
 export const createTRPCRouter = t.router;
 
+const isAuthedMiddleware = t.middleware(({ ctx, next }) => {
+  if (!ctx.session?.user || !ctx.token) {
+    throw new TRPCError({
+      code: "FORBIDDEN",
+      message: "You must be logged in to access this resource",
+      cause: "FORBIDDEN",
+    });
+  }
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user },
+      token: ctx.token,
+    },
+  });
+});
+
 /**
  * Public (unauthenticated) procedure
  *
@@ -83,3 +119,4 @@ export const createTRPCRouter = t.router;
  * are logged in.
  */
 export const publicProcedure = t.procedure;
+export const protectedProcedure = t.procedure.use(isAuthedMiddleware);
