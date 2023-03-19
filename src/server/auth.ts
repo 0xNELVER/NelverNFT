@@ -3,9 +3,10 @@ import type { GetServerSidePropsContext } from "next";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-import { comparePassword } from "@nelver/utils/auth";
+import { compare } from "@nelver/utils/auth";
 import { prisma } from "./db";
 import { env } from "@nelver/env.mjs";
+import { TRPCError } from "@trpc/server";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -87,11 +88,15 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        if (user && user.password && (await comparePassword(credentials.password, user.password)) && user.emailVerified) {
-          return user;
-        } else {
-          return null;
+        if (!user.emailVerified) {
+          throw new Error("Email not verified");
         }
+
+        if (!user || !user.password || !(await compare(credentials.password, user.password))) {
+          throw new Error("Invalid credentials");
+        }
+
+        return user;
       },
     }),
   ],

@@ -7,6 +7,7 @@ import { clusterApiUrl } from "@solana/web3.js";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
 import { useMemo, useState, type PropsWithChildren } from "react";
+import { Notifications } from "@mantine/notifications";
 
 function NelverUIProvider({ children }: PropsWithChildren) {
   const [colorScheme, setColorScheme] = useState<ColorScheme>("light");
@@ -65,6 +66,7 @@ function NelverUIProvider({ children }: PropsWithChildren) {
           },
         }}
       >
+        <Notifications limit={3} position="top-right" />
         <ModalsProvider>{children}</ModalsProvider>
       </MantineProvider>
     </ColorSchemeProvider>

@@ -2,6 +2,8 @@ import { env } from "@nelver/env.mjs";
 import nodemailer from "nodemailer";
 import type SMTPTransport from "nodemailer/lib/smtp-transport";
 
+const EMAIL_VERIFICATION_LINK_SUBJECT = "Verify your email address";
+
 class EmailTransporter {
   transporter: nodemailer.Transporter<SMTPTransport.SentMessageInfo> | null = null;
 
@@ -25,23 +27,46 @@ type SendMailInput = {
   from: string;
   toAddresses: string[];
   subject: string;
-  body: string;
-  bodyHtml: string;
+  body?: string;
+  bodyHtml?: string;
 };
 
-export const sendMail = async ({ from, toAddresses, subject, body, bodyHtml }: Partial<SendMailInput>) => {
-  const info = await emailTransporter.instance.sendMail({
+const sendMail = async ({ from, toAddresses, subject, body, bodyHtml }: SendMailInput) => {
+  return await emailTransporter.instance.sendMail({
     from, // sender address
     to: toAddresses, // list of receivers
     subject, // Subject line
     text: body, // plain text body
     html: bodyHtml, // html body
   });
+};
 
-  console.log("Message sent: %s", info.messageId);
-  // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+type SendVerificationLinkEmailInput = {
+  recipient: string;
+  verificationUrl: string;
+};
 
-  // Preview only available when sending through an Ethereal account
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+export const sendVerificationLinkEmail = async ({ recipient, verificationUrl }: SendVerificationLinkEmailInput) => {
+  const bodyHtml = `<!DOCTYPE html>
+  <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Email Verification</title>
+    </head>
+    <body>
+      <h1>Verify Your Email Address</h1>
+      <p>Thank you for registering with us! To complete your registration and verify your email address, please click the button below:</p>
+      <a href="${verificationUrl}"><button style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px;">Verify Email Address</button></a>
+      <p>If the button above does not work, please copy and paste the following link into your web browser:</p>
+      <p>${verificationUrl}</p>
+      <p>Thank you for joining us!</p>
+    </body>
+  </html>`;
+
+  return await sendMail({
+    from: env.EMAIL_FROM,
+    toAddresses: [recipient],
+    subject: EMAIL_VERIFICATION_LINK_SUBJECT,
+    bodyHtml,
+  });
 };

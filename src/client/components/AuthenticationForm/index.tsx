@@ -4,6 +4,8 @@ import { upperFirst, useToggle } from "@mantine/hooks";
 import { api } from "@nelver/utils/api";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
+import { notifications } from "@mantine/notifications";
+import { TRPCClientError } from "@trpc/client";
 
 type SubmitType = "signin" | "signup";
 
@@ -49,13 +51,27 @@ export function AuthenticationForm(props: PaperProps) {
   const { mutateAsync: signUpMutate } = api.auth.signUp.useMutation({
     onSuccess: () => {
       toggle();
+      notifications.show({
+        message:
+          "A verification email has been sent! Please check your inbox to confirm your email address and access Nelver.",
+        color: "green",
+      });
+    },
+    onError: (error) => {
+      notifications.show({ message: error.message, title: error.data?.code, color: "red" });
     },
   });
 
   const onSignIn = async (values: SignInSchema) => {
     await signIn("credentials", {
       ...values,
-      callbackUrl: router.query?.callbackUrl?.toString(),
+      redirect: false,
+    }).then(async (res) => {
+      if (res?.ok) {
+        await router.push(router.query?.callbackUrl?.toString() || "/");
+      } else {
+        notifications.show({ title: "Error", message: res?.error, color: "red" });
+      }
     });
   };
 
