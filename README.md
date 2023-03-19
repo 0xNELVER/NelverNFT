@@ -16,6 +16,7 @@ NelverNFT was conceived with the goal of building to accelerate the adoption of 
 - if update prisma schema, run: `npx prisma generate` then npx `prisma db push`
 - `npm run dev` to run the server
 - don't forget to create `.env` file and add all required variable
+- [playground](http:localhost:3000/api/trpc-playground)
 
 
 
