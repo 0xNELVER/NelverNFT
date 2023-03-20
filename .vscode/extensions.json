@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "dbaeumer.vscode-eslint",
+        "ms-vsliveshare.vsliveshare",
+        "esbenp.prettier-vscode",
+        "prisma.prisma",
+        "vscode-icons-team.vscode-icons",
+        "mikestead.dotenv"
+    ]
+}
