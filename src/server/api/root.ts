@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "@nelver/server/api/trpc";
 import { authRouter } from "@nelver/server/api/routers/auth";
+import { walletRouter } from "@nelver/server/api/routers/wallet";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { authRouter } from "@nelver/server/api/routers/auth";
  */
 export const appRouter = createTRPCRouter({
   auth: authRouter,
+  wallet: walletRouter
 });
 
 // export type definition of API

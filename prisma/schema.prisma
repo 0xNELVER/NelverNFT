@@ -34,9 +34,9 @@ model Account {
 model Session {
     id           String   @id @default(uuid())
     sessionToken String   @unique
-    userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId       String
 
     @@index([userId])
     @@map("sessions")
@@ -52,6 +52,7 @@ model User {
     phone   String?
     address String?
     image   String?
+    wallets Wallet[]
 
     accounts Account[]
     sessions Session[]
@@ -61,6 +62,18 @@ model User {
     deletedAt DateTime?
 
     @@map("users")
+}
+
+model Wallet {
+    publicKey      String @id
+    privateKeyHash String
+    user           User   @relation(fields: [userId], references: [id])
+    userId         String
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime  @default(now()) @updatedAt
+
+    @@index([userId])
 }
 
 model VerificationToken {

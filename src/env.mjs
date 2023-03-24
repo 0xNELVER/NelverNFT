@@ -23,6 +23,8 @@ const server = z.object({
   EMAIL_FROM: z.string(),
 
   NODE_ENV: z.enum(["development", "test", "production"]),
+
+  SOLANA_CLUSTER: z.enum(["devnet", "testnet", "mainnet-beta"])
 });
 
 /**
@@ -52,6 +54,7 @@ const processEnv = {
   EMAIL_FROM: process.env.EMAIL_FROM,
 
   NODE_ENV: process.env.NODE_ENV,
+  SOLANA_CLUSTER: process.env.SOLANA_CLUSTER
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
