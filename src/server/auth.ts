@@ -3,10 +3,9 @@ import type { GetServerSidePropsContext } from "next";
 import { getServerSession, type DefaultSession, type NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+import { env } from "@nelver/env.mjs";
 import { compare } from "@nelver/utils/auth";
 import { prisma } from "./db";
-import { env } from "@nelver/env.mjs";
-import { TRPCError } from "@trpc/server";
 
 /**
  * Module augmentation for `next-auth` types.
@@ -20,25 +19,16 @@ declare module "next-auth" {
     user: {
       id: string;
       email: string;
-      // ...other properties
-      // role: UserRole;
     } & DefaultSession["user"];
   }
-
-  interface User {
-    // ...other properties
-    // role: UserRole;
-    firstName?: string;
-    lastName?: string;
-  }
 }
 
-declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
-  interface JWT {
-    role: "staff" | "customer";
-  }
-}
+// declare module "next-auth/jwt" {
+//   /** Returned by the `jwt` callback and `getToken`, when using JWT sessions */
+//   interface JWT {
+//     // ...other properties
+//   }
+// }
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks,

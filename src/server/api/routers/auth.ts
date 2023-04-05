@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { createTRPCRouter, publicProcedure } from "@nelver/server/api/trpc";
+import { createTRPCRouter, protectedProcedure, publicProcedure } from "@nelver/server/api/trpc";
 import { sendVerificationLinkEmail } from "@nelver/server/services/emailService";
 import { getBaseUrl } from "@nelver/utils/api";
 import { compare, hash } from "@nelver/utils/auth";
@@ -88,4 +88,11 @@ export const authRouter = createTRPCRouter({
 
       return "Email verified! You can now sign in.";
     }),
+  checkWalletExists: protectedProcedure.mutation(async ({ ctx }) => {
+    const wallet = await ctx.prisma.wallet.findFirst({
+      where: { userId: ctx.session.user.id },
+    });
+
+    return Boolean(wallet);
+  }),
 });

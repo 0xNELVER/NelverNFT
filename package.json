@@ -40,9 +40,11 @@
     "nodemailer": "^6.9.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-use": "^17.4.0",
     "superjson": "1.12.2",
     "trpc-playground": "^1.0.4",
-    "zod": "^3.21.4"
+    "zod": "^3.21.4",
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
