@@ -3,13 +3,13 @@ import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 
 interface WalletModalState {
-  wallet: RouterOutputs["wallet"]["import"] | null;
-  setWallet: (wallet: RouterOutputs["wallet"]["import"]) => void;
+  importedWallet: RouterOutputs["wallet"]["import"] | null;
+  setImportedWallet: (wallet: RouterOutputs["wallet"]["import"]) => void;
 }
 
 export const useWalletModalStore = create<WalletModalState>()(
   devtools((set) => ({
-    wallet: null,
-    setWallet: (wallet) => set({ wallet }),
+    importedWallet: null,
+    setImportedWallet: (wallet) => set({ importedWallet: wallet }),
   }))
 );

@@ -1,8 +1,5 @@
 import { type ColorScheme, ColorSchemeProvider, MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
-import { WalletAdapterNetwork } from "@solana/wallet-adapter-base";
-import { ConnectionProvider, WalletProvider } from "@solana/wallet-adapter-react";
-import { PhantomWalletAdapter } from "@solana/wallet-adapter-wallets";
 import { clusterApiUrl } from "@solana/web3.js";
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
@@ -74,19 +71,13 @@ function NelverUIProvider({ children }: PropsWithChildren) {
 }
 
 function NelverBlockchainProvider({ children }: PropsWithChildren) {
-  const network = WalletAdapterNetwork.Devnet;
+  // const network = WalletAdapterNetwork.Devnet;
 
-  const endpoint = useMemo(() => clusterApiUrl(network), [network]);
+  // const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
-  const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
+  // const wallets = useMemo(() => [new PhantomWalletAdapter()], []);
 
-  return (
-    <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} autoConnect>
-        {children}
-      </WalletProvider>
-    </ConnectionProvider>
-  );
+  return <>{children}</>;
 }
 
 export function NelverProvider({ session, children }: PropsWithChildren<{ session: Session | null }>) {

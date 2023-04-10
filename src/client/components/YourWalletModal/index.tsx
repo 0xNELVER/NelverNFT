@@ -1,4 +1,4 @@
-import { Box, Button, Code, CopyButton, Divider, Flex, Text, TextInput, Title, Tooltip } from "@mantine/core";
+import { Box, Button, Code, CopyButton, Divider, Flex, Image, Text, TextInput, Title, Tooltip } from "@mantine/core";
 import { modals } from "@mantine/modals";
 import { useWalletModalStore } from "@nelver/client/components/YourWalletModal/store";
 import { api, type RouterOutputs } from "@nelver/utils/api";
@@ -43,26 +43,38 @@ const NewWallet = () => {
 };
 
 const ImportWallet = () => {
-  const { wallet, setWallet } = useWalletModalStore();
+  const { importedWallet, setImportedWallet } = useWalletModalStore();
   const [privateKey, setPrivateKey] = useState("");
   const { mutate } = api.wallet.import.useMutation({
-    onSuccess: setWallet,
+    onSuccess: setImportedWallet,
+  });
+  const isImported = !!importedWallet;
+
+  api.wallet.info.useQuery(void 0, {
+    enabled: isImported,
+    initialData: importedWallet,
+    onSuccess: setImportedWallet,
   });
 
-  console.log(wallet);
+  console.log(isImported, importedWallet);
 
-  if (wallet) {
+  if (isImported && importedWallet) {
     return (
       <Box>
         <Divider style={{ marginTop: 10, marginBottom: 10 }} />
         <Flex columnGap="xs" align="center" wrap="nowrap">
           <Text fw="bold">Address:</Text>
-          <Text fz="sm"> {wallet.address}</Text>
+          <Text fz="sm"> {importedWallet.address}</Text>
         </Flex>
         <Flex columnGap="xs" align="center" wrap="nowrap">
           <Text fw="bold">Balance:</Text>
-          <Text fz="sm"> {wallet.solBalance}</Text>
+          <Text fz="sm"> {importedWallet.balance} NEL</Text>
         </Flex>
+        <Flex columnGap="xs" align="center" wrap="nowrap">
+          <Text fw="bold">Name:</Text>
+          <Text fz="sm"> {importedWallet.nevMetadata?.name}</Text>
+        </Flex>
+        <Image src={importedWallet.nevMetadata?.image} alt="Wallet avatar" style={{ width: 100, height: 100 }} />
         <Divider style={{ marginTop: 10, marginBottom: 10 }} />
       </Box>
     );
@@ -85,7 +97,9 @@ const ImportWallet = () => {
 
 export function YourWalletModal() {
   const { mutateAsync } = api.auth.checkWalletExists.useMutation();
-  const { wallet } = useWalletModalStore();
+  const { importedWallet } = useWalletModalStore();
+
+  console.log("importedWallet", importedWallet);
 
   return (
     <Button
@@ -95,7 +109,7 @@ export function YourWalletModal() {
             modals.open({
               size: "xl",
               centered: true,
-              title: <Title order={3}>{wallet ? "Your" : hasWallet ? "Import" : "Create"} Nelver Wallet</Title>,
+              title: <Title order={3}>{importedWallet ? "Your" : hasWallet ? "Import" : "Create"} Nelver Wallet</Title>,
               children: <Box>{hasWallet ? <ImportWallet /> : <NewWallet />}</Box>,
             });
           })

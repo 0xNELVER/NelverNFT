@@ -1,10 +1,9 @@
-import { Button, Grid, Group, Modal, Text, TextInput, Title } from "@mantine/core";
+import { Button, Grid, Group, Text, TextInput, Title } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { modals } from "@mantine/modals";
 import { EventCard } from "@nelver/client/components/EventCard";
 import { MainLayout } from "@nelver/client/components/MainLayout";
 import { type NextPageWithLayout } from "@nelver/pages/_app";
-import { useWallet } from "@solana/wallet-adapter-react";
 import Head from "next/head";
 
 const MockEvents = [
@@ -276,8 +275,6 @@ const MockEvents = [
 ];
 
 const ExploreEvents: NextPageWithLayout = () => {
-  const { connected } = useWallet();
-
   const form = useForm({
     initialValues: {
       title: "",
@@ -296,7 +293,7 @@ const ExploreEvents: NextPageWithLayout = () => {
         <Grid.Col span={12}>
           <Group position="apart">
             <Text></Text>
-            {connected ? (
+            {/* {connected ? (
               <Button
                 onClick={() =>
                   modals.open({
@@ -317,7 +314,7 @@ const ExploreEvents: NextPageWithLayout = () => {
               >
                 New Event
               </Button>
-            ) : null}
+            ) : null} */}
           </Group>
         </Grid.Col>
         {/* <Grid.Col span={2}>Another Filter</Grid.Col> */}

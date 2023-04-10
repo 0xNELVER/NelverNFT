@@ -24,7 +24,11 @@ const server = z.object({
 
   NODE_ENV: z.enum(["development", "test", "production"]),
 
-  SOLANA_CLUSTER: z.enum(["devnet", "testnet", "mainnet-beta"])
+  SOLANA_CLUSTER: z.enum(["devnet", "testnet", "mainnet-beta"]),
+
+  WALLET_ENCRYPT_KEY: z.string(),
+  WALLET_ENCRYPT_IV: z.string(),
+  NELVER_TOKEN_MINT_ADDRESS: z.string()
 });
 
 /**
@@ -54,7 +58,10 @@ const processEnv = {
   EMAIL_FROM: process.env.EMAIL_FROM,
 
   NODE_ENV: process.env.NODE_ENV,
-  SOLANA_CLUSTER: process.env.SOLANA_CLUSTER
+  SOLANA_CLUSTER: process.env.SOLANA_CLUSTER,
+  WALLET_ENCRYPT_KEY: process.env.WALLET_ENCRYPT_KEY,
+  WALLET_ENCRYPT_IV: process.env.WALLET_ENCRYPT_IV,
+  NELVER_TOKEN_MINT_ADDRESS: process.env.NELVER_TOKEN_MINT_ADDRESS
   // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
 };
 
